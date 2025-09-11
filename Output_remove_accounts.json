@@ -1,0 +1,36 @@
+{
+    "status": "Task completed.",
+    "task details": [
+      "TASK: remove_accounts",
+      "BEGIN BATCH 1 OF 2 (3 accounts)",
+      [
+        "GRANT ACCESS...",
+        "111111111111: Excluded.",
+        "222222222222: Grant access - trust policy updated.",
+        "333333333333: Grant access - trust policy updated.",
+        "GRANT ACCESS STATUS: (Batch 1/2) -- (Accounts 2/3) -- Excluded 1 -- Skipped 0."
+      ],
+      [
+        "REMOVE ACCOUNT...",
+        "111111111111: Excluded.",
+        "222222222222: Account removed from org.",
+        "333333333333: Account removed from org.",
+        "REMOVE ACCOUNT STATUS: (Batch 1/2) -- (Accounts 2/3) -- Excluded 1 -- Skipped 0."
+      ],
+      "END BATCH 1 OF 2).",
+      "BEGIN BATCH 2 OF 2 (2 accounts)",
+      [
+        "GRANT ACCESS...",
+        "444444444444: Grant access - trust policy updated.",
+        "555555555555: Grant access - trust policy updated.",
+        "GRANT ACCESS STATUS: (Batch 2/2) -- (Accounts 2/2) -- Excluded 0 -- Skipped 0."
+      ],
+      [
+        "REMOVE ACCOUNT...",
+        "444444444444: Account removed from org.",
+        "555555555555: Error removing account from org. An error occurred (AccountNotFoundException) when calling the RemoveAccountFromOrganization operation: You specified an account that doesn't exist.",
+        "REMOVE ACCOUNT STATUS: (Batch 2/2) -- (Accounts 1/2) -- Excluded 0 -- Skipped 0."
+      ],
+      "END BATCH 2 OF 2)."
+    ]
+  }

@@ -1,0 +1,23 @@
+{   
+  "__VALID_TASKS__": "group_accounts, remove_accounts, invite_accounts",
+  "task": "remove_accounts",
+  "wave_len": 100,
+  "params": {
+    "mgmt_account_id_current": "111111111111",
+    "mgmt_account_id_new": "222222222222",
+    "org_access_role_current": "CloudAdmin",
+    "org_access_role_new": "OrganizationAccountAccessRole",
+    "max_invites": 10
+  },
+  "accounts": [
+    "333333333333",
+    "444444444444",
+    "555555555555"
+    ],
+  "exclusions": [
+    "666666666666",
+    "777777777777"
+  ]
+}
+
+

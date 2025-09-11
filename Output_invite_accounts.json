@@ -1,0 +1,49 @@
+{
+    "status": "Task completed.",
+    "task details": [
+        "TASK: invite_accounts",
+        "BEGIN BATCH 1 OF 2 (3 accounts)",
+        [
+            "SEND INVITE...",
+            "111111111111: Excluded.",
+            "222222222222: Invite sent.",
+            "333333333333: Invite sent.",
+            "SEND INVITE STATUS: (Batch 1/2) -- (Accounts 2/3) -- Excluded 1 -- Skipped 0."
+        ],
+        [
+            "ACCEPT INVITE...",
+            "111111111111: Excluded.",
+            "222222222222: Invite accepted.",
+            "333333333333: Invite accepted.",
+            "ACCEPT INVITE STATUS: (Batch 1/2) -- (Accounts 2/3) -- Excluded 1 -- Skipped 0."
+        ],
+        [
+            "REMOVE ACCESS...",
+            "111111111111: Excluded.",
+            "222222222222: Remove access for old payer - trust policy updated.",
+            "333333333333: Remove access for old payer - trust policy updated.",
+            "REMOVE ACCESS STATUS: (Batch 1/2) -- (Accounts 2/3) -- Excluded 1 -- Skipped 0."
+        ],
+        "END BATCH 1 OF 2).",
+        "BEGIN BATCH 2 OF 2 (2 accounts)",
+        [
+            "SEND INVITE...",
+            "444444444444: Invite sent.",
+            "555555555555: Error sending invite to account. An error occurred (HandshakeConstraintViolationException) when calling the InviteAccountToOrganization operation: The AWS account is already a member of an organization.",
+            "SEND INVITE STATUS: (Batch 2/2) -- (Accounts 1/2) -- Excluded 0 -- Skipped 0."
+        ],
+        [
+            "ACCEPT INVITE...",
+            "444444444444: Invite accepted.",
+            "555555555555: Skipped due to error.  See previous step.",
+            "ACCEPT INVITE STATUS: (Batch 2/2) -- (Accounts 1/2) -- Excluded 0 -- Skipped 1."
+        ],
+        [
+            "REMOVE ACCESS...",
+            "444444444444: Remove access for old payer - trust policy updated.",
+            "555555555555: Skipped due to error.  See previous steps.",
+            "REMOVE ACCESS STATUS: (Batch 2/2) -- (Accounts 1/2) -- Excluded 0 -- Skipped 1."
+        ],
+        "END BATCH 2 OF 2)."
+    ]
+}
