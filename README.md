@@ -3,7 +3,7 @@
 This solution facilitates the migration of AWS accounts from one organization/payer to another, handling the process in phases with support for migration waves.
 
 ## Description
-This solution is used to migrate large number of AWS accounts from one organization/payer to another. The code is to be executed (as described in Order of Operations) in both current and new payer accounts as a Lambda function (deploy as is) or Python script (conversion needed). The code will automatically detect the current partition and build the appropriate ARNs so you should be able to use the same code for different AWS partitions (ie: commercial, GovCloud...).
+This solution is used to migrate large number of AWS accounts from one organization/payer to another. The code is to be executed (as described in Execution Process) in both current and new payer accounts as a Lambda function (deploy as is) or Python script (conversion needed). The code will automatically detect the current partition and build the appropriate ARNs so you should be able to use the same code for different AWS partitions (ie: commercial, GovCloud...).
 
 ## Preparation
 
