@@ -23,9 +23,8 @@ This solution is used to migrate large number of AWS accounts from one organizat
 
 The solution code is created for a Lambda function as it allows for more flexibility in terms of error logging and debugging. As such, you should create a new Lambda function in each payer account and paste the code in. It should take approximately 2-3 seconds for the Lambda function to process each linked account therefore, be sure to configure Lambda execution time and allow enough time to process all accounts in each migration wave.
 
-Before you start the migration, be sure to review/request service limit increases for the new payer. Get the maximum Open Invites (aka: handshake) and account limits increased as needed. By default, new account/organization has the following limits:
+Before you start the migration, be sure to review/request service limit increases for the new payer. Get the maximum "Default maximum number of accounts" limit increased as needed. By default, new account/organization has the following limits:
   - Accounts: 10
-  - Open Invites: 10 (20 for some if increased, and higher for legacy accounts)
 
 ## Execution Process
 
@@ -37,10 +36,11 @@ If you have a large set of accounts to be transfer, break them up into multiple 
 
 ### Phase 1: Group Accounts (Current Payer)
 *Optional task to organize accounts into migration waves*
+Execute this task if you have a large number of accounts in your organization and want to programmatically query a list of accounts to break them up into more manageable waves.
 
 - **Task**: `group_accounts`
 - **Key Parameter**: `wave_len` (accounts per wave)
-- **Purpose**: Queries Organizations API to list all accounts and divide into manageable waves
+- **Purpose**: Queries Organizations API to list all accounts and divide into manageable waves.
 - **Output**: Creates wave.json file(s) for subsequent phases
 
 ### Phase 2: Remove Accounts (Current Payer)
@@ -48,10 +48,9 @@ If you have a large set of accounts to be transfer, break them up into multiple 
 
 This phase uses the "wave.json" file(s) created in Phase 1 as the input. During this phase, the function/script will create/update the required IAM role to grant new payer access to the linked accounts, and removed the accounts from the current organization. By default, the role name is OrganizationAccountAccessRole. Your organization might have a different role name. You can keep the same role name or specify a different one; however, it should match with the role used in the new organization. For Phase 2, you can execute one wave after another until all accounts are removed from the organization. However, we recommend you do one wave at a time in lock step with Phase 3. This gives you the opportunity to fix any issue that might arise and prevent potential issues with billing early on in the process.
 
-- **Task**: `remove_accounts`
+- **Task**: `grant_access`
 - **Steps**:
   1. Grant access: Creates/updates IAM role for new payer account
-  2. Remove account: Removes linked accounts from current organization
 - **Input**: Uses wave.json files from Phase 1
 
 ### Phase 3: Invite Accounts (New Payer)
