@@ -113,16 +113,15 @@ Create/update Test Event with the content of wave.json for each migration wave.
 
 If you execute the function in the Lambda console, you will need to create a Test Event with the content of the "wave.json" file. Be sure to update it for each subsequent wave file.
 
-Check CloudWatch Logs for output to determine the status of each account.
+Check CloudWatch Logs for output to determine the status of each account. Output will be recorded in json format.
 
-## Error Handling
+## Troublehshooting
 
-For all accounts that encountered errors, gather them to create a new list or append to another list and rerun. Each action or step during Phase 2 & 3 should provide an account by account error. Follow the guidelines below to check for errors, fix them before rerun.
+The solution will log progress and errors at each step. The result is a json blob that document the tasks for each account. Follow the guidelines below to check for errors, fix them before rerun.
 
-- **Remove accounts**: There are two steps in this phase.
+- **Grant access**: There are two steps in this phase.
   - Grant access: If errors occur during this step, check IAM permissions for the current role.
-  - Remove accounts: If errors occur during this step, check account contraints (ie: payment method, support plan...).
-
+  
 - **Invite accounts**:
   - Send invite: If errors occur during this step, check IAM permissions for the new role, if the account is valid, or if there is a pending invite.
   - Accept invite: If errors occur during this step, check parameters in the "wave.json" file, check IAM permissions for the new role to see if new payer has permissions.
