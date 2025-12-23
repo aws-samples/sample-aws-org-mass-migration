@@ -6,7 +6,6 @@ partition = ''
 this_account = ''
 error_msg = []
 grant_access_status = []
-remove_account_status = []
 send_invite_status = []
 accept_invite_status = []
 remove_access_status = []
@@ -18,9 +17,15 @@ sts_client = boto3.client('sts')
 
 def lambda_handler(event, context):
 
-    # no progress tracking - need indicator to tell how many pass/fail
+    # function expects to receive a dictionary that contains info needed to carry out the tasks
+    # look for wave.json for an example. Task is set in the json file.
+    # Task can be one of the followings:
+    # 1. group_accounts - this tasks query accounts from AWS Organizations and organize them in groups
+    # 2. grant_access - this task creates/updates the IAM role then remove the accounts from the current org
+    # 3. invite_accounts - this task groups the accounts into waves and make the migration more manageable
 
-    global partition, this_account, grant_access_status, remove_account_status, send_invite_status, accept_invite_status, remove_access_status, phase_2_errors, phase_3_errors
+
+    global partition, this_account, grant_access_status, send_invite_status, accept_invite_status, remove_access_status, phase_2_errors, phase_3_errors
 
     response = sts_client.get_caller_identity()
     this_account = response['Account']
@@ -34,7 +39,7 @@ def lambda_handler(event, context):
 
     try:
 
-        # this is Phase 1 (optional if wave.json is manually generated)
+        # Phase 1: Current payer to execute this task to group accounts together in smaller waves (optional if wave.json is manually generated)
         if task == 'group_accounts':    # this task groups the accounts into waves and make the migration more manageable
 
             wave_len = get_event_param(event, 'wave_len')
@@ -75,36 +80,25 @@ def lambda_handler(event, context):
 
                 task_details.append('BEGIN BATCH ' + str(batch_number) + ' OF ' + str(batch_count) + ' (' + str(batch_size) + ' accounts)')
 
-                # this is Phase 2
-                if task == 'remove_accounts':       # this task creates/updates the IAM role then remove the accounts from the current org
+                # Phase 2: Current payer to execute this task and grant new payer access to the accounts
+                if task == 'grant_access':       # this task creates/updates the IAM role then remove the accounts from the current org
 
                     access_granted = 0
-                    accounts_removed = 0
                     excluded_count = 0
                     phase_2_errors = {}
 
                     grant_access_status = ['GRANT ACCESS...']
-                    remove_account_status = ['REMOVE ACCOUNT...']
                     for member_account_id in account_list:
                         if member_account_id in exclusions:
                             excluded_count += 1
                             grant_access_status.append(member_account_id + ': Excluded.')
-                            remove_account_status.append(member_account_id + ': Excluded.')
                         else:
                             access_granted += grant_access_in_member_account(member_account_id, mgmt_account_id_new, org_access_role_current, org_access_role_new)
-                            # remove account from the organization unless we run into some error in previous step
-                            if member_account_id in phase_2_errors:
-                                remove_account_status.append(member_account_id + ': Skipped due to error.  See previous step.')
-                            else:
-                                accounts_removed += remove_account_from_organization(member_account_id)
 
                     grant_access_status.append(f'GRANT ACCESS STATUS: (Batch {batch_number}/{batch_count}) -- (Accounts {access_granted}/{batch_size}) -- Excluded {excluded_count} -- Skipped 0.')
                     task_details.append(grant_access_status)
 
-                    remove_account_status.append(f'REMOVE ACCOUNT STATUS: (Batch {batch_number}/{batch_count}) -- (Accounts {accounts_removed}/{batch_size}) -- Excluded {excluded_count} -- Skipped {len(phase_2_errors)}.')
-                    task_details.append(remove_account_status)
-
-                # this is Phase 3
+                # Phase 3: New payer to execute this task. Invites the accounts and accepts the invites on behalf of the linked accounts
                 elif task == 'invite_accounts':     # this task invites, accepts the accounts into the new org then removes access for old payer
 
                     if this_account != mgmt_account_id_new:
@@ -327,27 +321,6 @@ def grant_access_in_member_account(member_account_id, mgmt_account_id_new, org_a
     except Exception as e:
         grant_access_status.append(member_account_id + ': Error granting access. ' + str(e))
         phase_2_errors[member_account_id] = member_account_id
-        return 0
-
-
-
-
-# remove account from an organization
-def remove_account_from_organization(member_account_id):
-
-    global remove_account_status
-
-    try:
-
-        org_client.remove_account_from_organization(
-            AccountId = member_account_id
-        )
-
-        remove_account_status.append(member_account_id + ': Account removed from org.')
-        return 1    # for status tracking
-
-    except Exception as e:
-        remove_account_status.append(member_account_id + ': Error removing account from org. ' + str(e))
         return 0
 
 
