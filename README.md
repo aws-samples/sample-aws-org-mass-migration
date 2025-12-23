@@ -2,6 +2,8 @@
 
 This solution facilitates the migration of AWS accounts from one organization/payer to another, handling the process in phases with support for migration waves.
 
+Note: On November 19, 2025, AWS Organizations released a new feature that allows direct account transfer from one organization to another. As the result, the step to remove the linked account from the current organization is now redundant. This branch is kept to support high side where the feature isn't available yet. Ref: https://aws.amazon.com/about-aws/whats-new/2025/11/aws-organizations-direct-account-transfers/
+
 ## Description
 This solution is used to migrate large number of AWS accounts from one organization/payer to another. The code is to be executed (as described in Execution Process) in both current and new payer accounts as a Lambda function (deploy as is) or Python script (conversion needed). The code will automatically detect the current partition and build the appropriate ARNs so you should be able to use the same code for different AWS partitions (ie: commercial, GovCloud...).
 
