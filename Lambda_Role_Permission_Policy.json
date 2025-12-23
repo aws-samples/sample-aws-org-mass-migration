@@ -1,0 +1,53 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CloudWatch",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "Org",
+            "Effect": "Allow",
+            "Action": [
+                "organizations:ListHandshakesForOrganization",
+                "organizations:ListHandshakesForAccount",
+                "organizations:InviteAccountToOrganization",
+                "organizations:RemoveAccountFromOrganization",
+                "organizations:ListAccounts",
+                "organizations:AcceptHandshake"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "IAM",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetRole",
+                "iam:UpdateAssumeRolePolicy",
+                "iam:CreateRole",
+                "iam:PutRolePolicy",
+                "iam:ListAttachedRolePolicies",
+                "iam:ListRolePolicies",
+                "iam:DetachRolePolicy",
+                "iam:DeleteRole",
+                "iam:DeleteRolePolicy"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "STS",
+            "Effect": "Allow",
+            "Action": [
+                "sts:AssumeRole",
+                "sts:GetCallerIdentity"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
